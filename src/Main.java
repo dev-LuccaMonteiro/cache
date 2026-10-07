@@ -1,49 +1,75 @@
 import static java.lang.IO.*;
+import java.util.ArrayList;
+import java.util.List;
+
 void main() {
-    Map<Integer, Pessoa> banco = new TreeMap<>();
+    List<Pessoa> banco = new ArrayList<>();
     List<Pessoa> cache = new ArrayList<>();
 
-    Pessoa a = new Pessoa(1, "lucca", 16);
-    Pessoa b = new Pessoa(2, "Bruno", 18);
-    Pessoa c = new Pessoa(3, "Ryan", 18);
-    Pessoa d = new Pessoa(4, "VG", 67);
-    Pessoa e = new Pessoa(5, "Igor", 42);
-    cache.add(b);
-    banco.put(1, a);
-    banco.put(2, b);
-    banco.put(3, c);
-    banco.put(4, d);
-    banco.put(5, e);
+    banco.add(new Pessoa(1, "lucca", 16));
+    banco.add(new Pessoa(2, "Bruno", 18));
+    banco.add(new Pessoa(3, "Ryan", 18));
+    banco.add(new Pessoa(4, "VG", 67));
+    banco.add(new Pessoa(5, "Igor", 42));
 
+    boolean ex = true;
 
-    int busca = Integer.parseInt(readln("coloque um id para pesquisar no cache: "));
-    boolean encontrado = false;
-    if (cache.isEmpty()) {
+    while (ex) {
+        println("\n--- MENU ---");
+        println("1. Buscar por ID");
+        println("2. Ver cache");
+        println("3. Sair");
 
+        String op = readln("Escolha uma das três opções: ");
 
-        for (Pessoa p : cache) {
-            if (busca == p.getid()) {
-                encontrado = true;
-                println("Pessoa encontrada no cache");
-                break;
-            } else {
-                println("id nao achado, buscando no banco");
-                //banco.forEach()
+        if (op.equals("1")) {
+            int busca = Integer.parseInt(readln("Coloque um ID para pesquisar: "));
+            Pessoa pessoaEncontrada = null;
 
-                for (Map.Entry<Integer, Pessoa> sei : banco.entrySet()) {
-                    Integer id = sei.getKey();
-                    Pessoa z = sei.getValue();
-                    if (id == busca) {
-                        IO.println(id + z.getNome());
-                        println("Pessoa encontrada, adicionando ao cache");
-                        cache.add(sei.getValue());
-                    }
+            // 1. Procura primeiro no cache
+            for (Pessoa p : cache) {
+                if (p.getid() == busca) {
+                    pessoaEncontrada = p;
+                    println("Pessoa encontrada NO CACHE: " + p);
+                    break;
                 }
-
             }
 
+            // 2. Se não encontrou no cache, busca no banco
+            if (pessoaEncontrada == null) {
+                for (Pessoa p : banco) {
+                    if (p.getid() == busca) {
+                        pessoaEncontrada = p;
+                        println("Pessoa achada no BANCO! Adicionando ao cache...");
+
+                        // Gerenciamento do limite do cache (máximo 10 itens)
+                        if (cache.size() >= 10) {
+                            cache.remove(0); // Remove o elemento mais antigo (FIFO)
+                            println("Cache cheio: pessoa mais antiga removida.");
+                        }
+
+                        cache.add(pessoaEncontrada);
+                        println("Pessoa adicionada ao cache com sucesso.");
+                        break;
+                    }
+                }
+            }
+
+            // 3. Caso não exista nem no banco
+            if (pessoaEncontrada == null) {
+                println("Pessoa não encontrada nem no cache, nem no banco de dados.");
+            }
+
+        } else if (op.equals("2")) {
+            println("Conteúdo atual do cache:");
+            println(cache);
+
+        } else if (op.equals("3")) {
+            println("Saindo do sistema...");
+            ex = false;
+
+        } else {
+            println("Opção inválida! Tente novamente.");
         }
-
-
     }
 }
