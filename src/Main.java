@@ -26,7 +26,7 @@ void main() {
             int busca = Integer.parseInt(readln("Coloque um ID para pesquisar: "));
             Pessoa pessoaEncontrada = null;
 
-            // 1. Procura primeiro no cache
+            
             for (Pessoa p : cache) {
                 if (p.getid() == busca) {
                     pessoaEncontrada = p;
@@ -35,16 +35,16 @@ void main() {
                 }
             }
 
-            // 2. Se não encontrou no cache, busca no banco
+            
             if (pessoaEncontrada == null) {
                 for (Pessoa p : banco) {
                     if (p.getid() == busca) {
                         pessoaEncontrada = p;
                         println("Pessoa achada no BANCO! Adicionando ao cache...");
 
-                        // Gerenciamento do limite do cache (máximo 10 itens)
+                        
                         if (cache.size() >= 10) {
-                            cache.remove(0); // Remove o elemento mais antigo (FIFO)
+                            cache.remove(0); 
                             println("Cache cheio: pessoa mais antiga removida.");
                         }
 
@@ -55,7 +55,7 @@ void main() {
                 }
             }
 
-            // 3. Caso não exista nem no banco
+            
             if (pessoaEncontrada == null) {
                 println("Pessoa não encontrada nem no cache, nem no banco de dados.");
             }
